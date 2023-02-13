@@ -9,3 +9,7 @@ flake8
 black
 python-dotenv>=0.5.1
 pyyaml
+pandas
+numpy
+matplotlib
+scikit-learn
