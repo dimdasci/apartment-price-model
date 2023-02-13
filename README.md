@@ -3,6 +3,11 @@
 
 A pricing model, which can predict the acceptable per night price for Airbnb apartment based on its properties and the offered amenities
 
+## Setup Project
+- clone repo
+- `make create_environment`
+- `conda activate apartment_price_model`
+- `make test_environment` to test development environment
 
 ## Project Organization
 ------------

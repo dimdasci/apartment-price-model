@@ -1,0 +1,3 @@
+data:
+  source_url: 'http://data.insideairbnb.com/spain/catalonia/barcelona/2022-12-11/data/listings.csv.gz'
+  test_split_ratio: 0.2
