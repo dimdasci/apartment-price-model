@@ -13,3 +13,8 @@ pandas
 numpy
 matplotlib
 scikit-learn
+
+#notebook
+jupyter-contrib-nbextensions==0.5.1
+notebook==6.4.10
+yapf==0.30

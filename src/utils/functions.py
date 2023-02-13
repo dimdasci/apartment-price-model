@@ -10,11 +10,13 @@ Exports:
 import yaml
 import logging
 from pathlib import Path
+import os
 
 
 def load_params() -> dict:
     """Loads params from params.yaml in the project root"""
-    with open("params.yaml", "r") as f:
+    params_path = os.path.join(get_project_dir(), "params.yaml")
+    with open(params_path, "r") as f:
         params = yaml.safe_load(f)
     return params
 

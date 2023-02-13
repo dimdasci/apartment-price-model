@@ -20,8 +20,11 @@ endif
 # COMMANDS                                                                      #
 #################################################################################
 
-install: 
+install: requirements
 	mkdir -p logs
+	jupyter contrib nbextension install --user
+	jupyter nbextension enable toc2/main
+	jupyter nbextension enable collapsible_headings/main
 
 ## Install Python Dependencies
 requirements: test_environment
@@ -29,9 +32,11 @@ requirements: test_environment
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 
 ## Make Dataset
-data: params.yaml
+get_data: 
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py 
-# data/raw data/processed
+
+clean_data: 
+	$(PYTHON_INTERPRETER) src/data/clean_dataset.py -d $(ARGS)
 
 ## Delete all compiled Python files
 clean:
@@ -71,7 +76,8 @@ test_environment:
 # PROJECT RULES                                                                 #
 #################################################################################
 
-
+notebook:
+	jupyter notebook --ip 0.0.0.0 --no-browser
 
 #################################################################################
 # Self Documenting Commands                                                     #

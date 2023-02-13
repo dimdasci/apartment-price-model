@@ -4,18 +4,17 @@ data:
   raw_data_path: 'data/raw'
   interim_data_path: 'data/interim'
   processed_data_path: 'data/processed'
+  train_data_file: 'train.csv'
+  test_data_file: 'test.csv'
   features:
-    - host_id
     - host_is_superhost
-    - neighbourhood
+    - neighbourhood_group_cleansed
     - property_type
     - room_type
     - accommodates
-    - bathrooms
     - bathrooms_text
     - bedrooms
     - beds
     - number_of_reviews
-    - review_scores_rating
   target: 'price'
   test_split_ratio: 0.2

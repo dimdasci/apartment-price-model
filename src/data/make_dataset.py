@@ -8,7 +8,7 @@ from os import path
 
 
 @click.command()
-def main():
+def main() -> None:
     """Downloads dataset from the URL, splits it into training and
     test datasets, stores them in project directories.
     Takes parameters form params.yaml.
@@ -33,16 +33,21 @@ def main():
         test_size=params["data"]["test_split_ratio"],
         random_state=params["random_seed"],
     )
-    logger.info(f"Split to training {train.shape} and "
-                f"test {test.shape} subsets")
+    logger.info(f"Split to training {train.shape} and " f"test {test.shape} subsets")
 
-    train.to_csv(path.join(params["data"]["raw_data_path"], "train.cvs"))
-    test.to_csv(path.join(params["data"]["raw_data_path"], "test.cvs"))
+    train.to_csv(
+        path.join(params["data"]["raw_data_path"], params["data"]["train_data_file"]),
+        index=False,
+    )
+    test.to_csv(
+        path.join(params["data"]["raw_data_path"], params["data"]["test_data_file"]),
+        index=False,
+    )
 
     logger.info("Training and test datasets are ready")
 
 
 if __name__ == "__main__":
-    logger = setup_logging(logname=__name__, loglevel="DEBUG")
+    logger = setup_logging(logname=__name__, loglevel="INFO")
 
     main()
