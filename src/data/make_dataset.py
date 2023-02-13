@@ -33,14 +33,20 @@ def main() -> None:
         test_size=params["data"]["test_split_ratio"],
         random_state=params["random_seed"],
     )
-    logger.info(f"Split to training {train.shape} and " f"test {test.shape} subsets")
+    logger.info(
+        f"Split to training {train.shape} and " f"test {test.shape} subsets"
+    )
 
     train.to_csv(
-        path.join(params["data"]["raw_data_path"], params["data"]["train_data_file"]),
+        path.join(
+            params["data"]["raw_data_path"], params["data"]["train_data_file"]
+        ),
         index=False,
     )
     test.to_csv(
-        path.join(params["data"]["raw_data_path"], params["data"]["test_data_file"]),
+        path.join(
+            params["data"]["raw_data_path"], params["data"]["test_data_file"]
+        ),
         index=False,
     )
 

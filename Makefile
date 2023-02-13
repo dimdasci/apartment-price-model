@@ -36,7 +36,12 @@ get_data:
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py 
 
 clean_data: 
-	$(PYTHON_INTERPRETER) src/data/clean_dataset.py -d $(ARGS)
+	$(PYTHON_INTERPRETER) src/data/clean_dataset.py --stage train
+	$(PYTHON_INTERPRETER) src/data/clean_dataset.py --stage test
+
+build_features: 
+	$(PYTHON_INTERPRETER) src/features/build_features.py --stage train
+	$(PYTHON_INTERPRETER) src/features/build_features.py --stage test
 
 ## Delete all compiled Python files
 clean:

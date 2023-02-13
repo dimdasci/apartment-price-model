@@ -13,6 +13,7 @@ pandas
 numpy
 matplotlib
 scikit-learn
+lightgbm
 
 #notebook
 jupyter-contrib-nbextensions==0.5.1

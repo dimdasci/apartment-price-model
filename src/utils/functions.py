@@ -5,12 +5,16 @@ Exports:
     - load_params       - loads params from params.yaml in the project root
     - setup_logging     - sets up logging handlers and a format
     - get_project_dir
+    - load_pickle
+    - save_pickle
 """
 
 import yaml
 import logging
 from pathlib import Path
 import os
+import pickle
+from typing import Any
 
 
 def load_params() -> dict:
@@ -61,3 +65,14 @@ def setup_logging(
 def get_project_dir() -> str:
     """Returns project directory"""
     return Path(__file__).resolve().parents[2]
+
+
+def load_pickle(path: str) -> Any:
+    with open(path, "rb") as f:
+        obj = pickle.load(f)
+    return obj
+
+
+def save_pickle(obj: Any, path: str) -> None:
+    with open(path, "wb") as f:
+        pickle.dump(obj, f)
