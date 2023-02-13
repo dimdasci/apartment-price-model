@@ -4,10 +4,12 @@ Exports:
 
     - load_params       - loads params from params.yaml in the project root
     - setup_logging     - sets up logging handlers and a format
+    - get_project_dir
 """
 
 import yaml
 import logging
+from pathlib import Path
 
 
 def load_params() -> dict:
@@ -52,3 +54,8 @@ def setup_logging(
     logger.addHandler(ch)
 
     return logger
+
+
+def get_project_dir() -> str:
+    """Returns project directory"""
+    return Path(__file__).resolve().parents[2]
