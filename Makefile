@@ -31,23 +31,6 @@ requirements: test_environment
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 
-## Make Dataset
-get_data: 
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py 
-
-clean_data: 
-	$(PYTHON_INTERPRETER) src/data/clean_dataset.py --stage train
-	$(PYTHON_INTERPRETER) src/data/clean_dataset.py --stage test
-
-build_features: 
-	$(PYTHON_INTERPRETER) src/features/build_features.py --stage train
-	$(PYTHON_INTERPRETER) src/features/build_features.py --stage test
-
-train_model:
-	$(PYTHON_INTERPRETER) src/models/train_model.py
-	
-test_model:
-	$(PYTHON_INTERPRETER) src/models/test_model.py
 
 ## Delete all compiled Python files
 clean:
@@ -57,9 +40,14 @@ clean:
 ## Format using Black
 format: 
 	black src
+
 ## Lint using flake8
 lint:
 	flake8 src
+
+## Run tests using pytest
+test:
+	pytest tests/
 
 ## Set up python interpreter environment
 create_environment:
@@ -84,7 +72,36 @@ test_environment:
 	$(PYTHON_INTERPRETER) test_environment.py
 
 #################################################################################
-# PROJECT RULES                                                                 #
+# PIPELINE COMMANDS                                                             #
+#################################################################################
+
+## Download and make training and test datasets
+get_data: 
+	$(PYTHON_INTERPRETER) src/data/make_dataset.py 
+
+## Clean data in datasets 
+clean_data: 
+	$(PYTHON_INTERPRETER) src/data/clean_dataset.py --stage train
+	$(PYTHON_INTERPRETER) src/data/clean_dataset.py --stage test
+
+## Feature engineering
+build_features: 
+	$(PYTHON_INTERPRETER) src/features/build_features.py --stage train
+	$(PYTHON_INTERPRETER) src/features/build_features.py --stage test
+
+## Train model and save it 
+train_model:
+	$(PYTHON_INTERPRETER) src/models/train_model.py
+
+## Evaluate model performance on test data	
+test_model:
+	$(PYTHON_INTERPRETER) src/models/test_model.py
+
+## Reproduce the whole pipeline
+pipeline: get_data clean_data build_features train_model test_model
+
+#################################################################################
+# PROJECT COMMANDS                                                              #
 #################################################################################
 
 IMAGE_TAG = "0.1.0"

@@ -4,7 +4,7 @@
 """
 
 import click
-from src.utils.functions import load_params, setup_logging
+from src.utils.functions import load_params, setup_logging, get_abs_path
 import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -39,13 +39,13 @@ def main() -> None:
     )
 
     train.to_csv(
-        path.join(
+        get_abs_path(
             params["data"]["raw_data_path"], params["data"]["train_data_file"]
         ),
         index=False,
     )
     test.to_csv(
-        path.join(
+        get_abs_path(
             params["data"]["raw_data_path"], params["data"]["test_data_file"]
         ),
         index=False,
