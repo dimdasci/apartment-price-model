@@ -67,6 +67,16 @@ def get_project_dir() -> str:
     return Path(__file__).resolve().parents[2]
 
 
+def get_abs_path(rel_path: str, filename: str) -> str:
+    """Return absolute path to the file with relative path"""
+
+    return os.path.join(
+        get_project_dir(),
+        rel_path,
+        filename,
+    )
+
+
 def load_pickle(path: str) -> Any:
     with open(path, "rb") as f:
         obj = pickle.load(f)

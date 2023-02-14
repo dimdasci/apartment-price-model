@@ -7,8 +7,7 @@ data:
   processed_data_path: 'data/processed'
   train_data_file: 'train.csv'
   test_data_file: 'test.csv'
-  train_dataset_file: 'train_dataset.bin'
-  test_dataset_file: 'test_dataset.bin'
+  categorical_feature_names_file: 'categorical_feature_names.csv'
   features:
     - host_is_superhost
     - neighbourhood_group_cleansed

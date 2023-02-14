@@ -1,9 +1,8 @@
 import numpy as np
 import click
-from os import path
 from src.utils.functions import (
     load_params,
-    get_project_dir,
+    get_abs_path,
     setup_logging,
     load_pickle,
     save_pickle,
@@ -13,7 +12,6 @@ import logging
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import OrdinalEncoder, StandardScaler
-import lightgbm as lgb
 
 
 @click.command()
@@ -26,20 +24,17 @@ def main(stage: DatasetStage) -> None:
     logger = logging.getLogger(__name__)
 
     params = load_params()
-    column_transformer_path = path.join(
-        get_project_dir(),
+    column_transformer_path = get_abs_path(
         params["model"]["path"],
         "column_transformer.pkl",
     )
-    source_dataset_path = path.join(
-        get_project_dir(),
+    source_dataset_path = get_abs_path(
         params["data"]["interim_data_path"],
         params["data"][f"{stage.value}_data_file"],
     )
-    dest_dataset_path = path.join(
-        get_project_dir(),
+    dest_dataset_path = get_abs_path(
         params["data"]["processed_data_path"],
-        params["data"][f"{stage.value}_dataset_file"],
+        params["data"][f"{stage.value}_data_file"],
     )
     logger.info(f"Build features for dataset {source_dataset_path}")
 
@@ -65,6 +60,9 @@ def main(stage: DatasetStage) -> None:
     )
 
     if stage == DatasetStage.TRAIN:
+        # we initialize and fit transformer to encode categorical
+        # features with Ordinal Encoder and scale numerical
+        # with StandardScaler
         column_transformer = ColumnTransformer(
             [
                 (
@@ -80,10 +78,21 @@ def main(stage: DatasetStage) -> None:
             remainder="drop",
         )
         column_transformer.fit(features)
+        # save transformer for test dataset processing stage
         save_pickle(column_transformer, column_transformer_path)
         logger.info("Saved fitted column transformer")
 
+        # save categorical feature names
+        pd.DataFrame({"categorical": categorical_features}).to_csv(
+            get_abs_path(
+                params["data"]["processed_data_path"],
+                params["data"]["categorical_feature_names_file"],
+            ),
+            index=False,
+        )
+
     else:
+        # load fitted transformer
         column_transformer = load_pickle(column_transformer_path)
         logger.info("Loaded fitted column transformer")
 
@@ -94,16 +103,14 @@ def main(stage: DatasetStage) -> None:
         f"{target_transformed.shape} target"
     )
 
-    dataset = lgb.Dataset(
-        features_transformed,
-        label=target_transformed,
-        feature_name=categorical_features + numerical_features,
-        categorical_feature=categorical_features,
-    )
-    dataset.save_binary(dest_dataset_path)
+    dataset = pd.DataFrame(
+        features_transformed, columns=categorical_features + numerical_features
+    ).join(target_transformed)
+
+    dataset.to_csv(dest_dataset_path, index=False)
 
 
 if __name__ == "__main__":
-    logger = setup_logging(logname=__name__, loglevel="DEBUG")
+    logger = setup_logging(logname=__name__, loglevel="INFO")
 
     main()
