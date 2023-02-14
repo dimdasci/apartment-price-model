@@ -8,7 +8,6 @@ from src.utils.functions import load_params, setup_logging, get_abs_path
 import logging
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from os import path
 
 
 @click.command()
