@@ -87,8 +87,20 @@ test_environment:
 # PROJECT RULES                                                                 #
 #################################################################################
 
+IMAGE_TAG = "0.1.0"
+IMAGE_NAME = "appartment_price_model"
+CONTAINER_NAME = "inference"
+
 notebook:
 	jupyter notebook --ip 0.0.0.0 --no-browser .
+
+build_api:
+	docker build . -t ${IMAGE_NAME}:${IMAGE_TAG}
+
+run_api:
+	docker run -p 8000:8000 \
+		--name ${CONTAINER_NAME} \
+		--rm ${IMAGE_NAME}:${IMAGE_TAG} 
 
 #################################################################################
 # Self Documenting Commands                                                     #
