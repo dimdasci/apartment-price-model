@@ -1,4 +1,8 @@
-# -*- coding: utf-8 -*-
+"""Downloads dataset from the URL, splits it into training and
+    test datasets, stores them in project directories.
+    Takes parameters form params.yaml.
+"""
+
 import click
 from src.utils.functions import load_params, setup_logging
 import logging
@@ -9,10 +13,7 @@ from os import path
 
 @click.command()
 def main() -> None:
-    """Downloads dataset from the URL, splits it into training and
-    test datasets, stores them in project directories.
-    Takes parameters form params.yaml.
-    """
+    """Main CLI function"""
     logger = logging.getLogger(__name__)
 
     params = load_params()

@@ -1,12 +1,11 @@
-import numpy as np
+"""Provides clean_dataset command"""
+
 import click
 from os import path
 from src.utils.functions import load_params, get_project_dir, setup_logging
 from src.data.datatypes import DatasetStage
 from src.data.functions import (
-    true_false_to_int,
     price_to_int,
-    is_features_valid,
     clean_features,
 )
 import logging

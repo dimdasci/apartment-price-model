@@ -1,6 +1,6 @@
 """Module provides inference API"""
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from src.utils.functions import load_params, get_abs_path, load_pickle
 from src.data.functions import clean_features
 from src.features.functions import restore_target
@@ -80,7 +80,9 @@ async def make_predictions(payload: PredictRequest):
     model = lgb.Booster(model_file=model_path)
     column_transformer = load_pickle(column_transformer_path)
 
-    dataset = clean_features(pd.DataFrame(payload.data[1:], columns=payload.data[0]))
+    dataset = clean_features(
+        pd.DataFrame(payload.data[1:], columns=payload.data[0])
+    )
 
     valid_features = dataset[dataset.is_valid]
     if valid_features.shape[0]:
