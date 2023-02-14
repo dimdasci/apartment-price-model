@@ -1,7 +1,6 @@
 # Apartment price model
-==============================
 
-[![Build Test](https://github.com/dimdasci/apartment-price-model/actions/workflows/makefile.yml/badge.svg)](https://github.com/dimdasci/apartment-price-model/actions/workflows/makefile.yml)
+[![Build Test](https://github.com/dimdasci/apartment-price-model/actions/workflows/makefile.yaml/badge.svg)](https://github.com/dimdasci/apartment-price-model/actions/workflows/makefile.yaml)
 
 A pricing model, which can predict the acceptable per night price for Airbnb apartment based on its properties and the offered amenities
 
