@@ -8,6 +8,7 @@ from src.utils.functions import (
     save_pickle,
 )
 from src.data.datatypes import DatasetStage
+from src.features.functions import transform_target
 import logging
 import pandas as pd
 from sklearn.compose import ColumnTransformer
@@ -26,7 +27,7 @@ def main(stage: DatasetStage) -> None:
     params = load_params()
     column_transformer_path = get_abs_path(
         params["model"]["path"],
-        "column_transformer.pkl",
+        params["model"]["column_transformer_file"],
     )
     source_dataset_path = get_abs_path(
         params["data"]["interim_data_path"],
@@ -97,7 +98,7 @@ def main(stage: DatasetStage) -> None:
         logger.info("Loaded fitted column transformer")
 
     features_transformed = column_transformer.transform(features)
-    target_transformed = np.log10(target)
+    target_transformed = transform_target(target)
     logger.info(
         f"Transformed {features_transformed.shape} features and "
         f"{target_transformed.shape} target"

@@ -15,6 +15,10 @@ matplotlib
 scikit-learn
 lightgbm
 
+# API
+fastapi
+uvicorn[standard]==0.20.0
+
 #notebook
 jupyter-contrib-nbextensions==0.5.1
 notebook==6.4.10

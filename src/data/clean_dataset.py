@@ -3,29 +3,14 @@ import click
 from os import path
 from src.utils.functions import load_params, get_project_dir, setup_logging
 from src.data.datatypes import DatasetStage
+from src.data.functions import (
+    true_false_to_int,
+    price_to_int,
+    is_features_valid,
+    clean_features,
+)
 import logging
 import pandas as pd
-
-
-def true_false_to_int(value: str) -> int:
-    """Transforms t/f values into 1/0"""
-    if value == "t":
-        return 1
-    elif value == "f":
-        return 0
-    else:
-        return np.NaN
-
-
-def price_to_int(value: str) -> int:
-    """Transforms price from string to int"""
-
-    return int(value.replace(",", "")[1:-3])
-
-
-def is_features_valid(row: pd.DataFrame) -> bool:
-    """Validates if feature values are in a valid range"""
-    return row.price < 1000 and row.bedrooms < 5 and row.accommodates < 9
 
 
 @click.command()
@@ -53,10 +38,10 @@ def main(stage: DatasetStage) -> None:
     df = pd.read_csv(source_dataset_path)
     logger.info(f"Loaded dataset shape {df.shape}")
 
-    df.price = df.price.apply(price_to_int)
-    df.host_is_superhost = df.host_is_superhost.apply(true_false_to_int)
     df = df.drop_duplicates().dropna(axis=0)
-    df = df[df.apply(is_features_valid, axis=1)].query("price < 1000")
+    df.price = df.price.apply(price_to_int)
+    df = clean_features(df)
+    df = df[df.is_valid].query("price < 1000").drop("is_valid", axis=1)
 
     logger.info(f"Cleaned dataset shape {df.shape}")
     df.to_csv(dest_dataset_path, index=False)
