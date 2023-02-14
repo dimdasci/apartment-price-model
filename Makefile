@@ -20,18 +20,17 @@ endif
 # COMMANDS                                                                      #
 #################################################################################
 
-install: 
+install: requirements
 	mkdir -p logs
+	jupyter contrib nbextension install --user
+	jupyter nbextension enable toc2/main
+	jupyter nbextension enable collapsible_headings/main
 
 ## Install Python Dependencies
 requirements: test_environment
 	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
 	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 
-## Make Dataset
-data: params.yaml
-	$(PYTHON_INTERPRETER) src/data/make_dataset.py 
-# data/raw data/processed
 
 ## Delete all compiled Python files
 clean:
@@ -41,9 +40,14 @@ clean:
 ## Format using Black
 format: 
 	black src
+
 ## Lint using flake8
 lint:
 	flake8 src
+
+## Run tests using pytest
+test:
+	pytest tests/
 
 ## Set up python interpreter environment
 create_environment:
@@ -68,10 +72,52 @@ test_environment:
 	$(PYTHON_INTERPRETER) test_environment.py
 
 #################################################################################
-# PROJECT RULES                                                                 #
+# PIPELINE COMMANDS                                                             #
 #################################################################################
 
+## Download and make training and test datasets
+get_data: 
+	$(PYTHON_INTERPRETER) src/data/make_dataset.py 
 
+## Clean data in datasets 
+clean_data: 
+	$(PYTHON_INTERPRETER) src/data/clean_dataset.py --stage train
+	$(PYTHON_INTERPRETER) src/data/clean_dataset.py --stage test
+
+## Feature engineering
+build_features: 
+	$(PYTHON_INTERPRETER) src/features/build_features.py --stage train
+	$(PYTHON_INTERPRETER) src/features/build_features.py --stage test
+
+## Train model and save it 
+train_model:
+	$(PYTHON_INTERPRETER) src/models/train_model.py
+
+## Evaluate model performance on test data	
+test_model:
+	$(PYTHON_INTERPRETER) src/models/test_model.py
+
+## Reproduce the whole pipeline
+pipeline: get_data clean_data build_features train_model test_model
+
+#################################################################################
+# PROJECT COMMANDS                                                              #
+#################################################################################
+
+IMAGE_TAG = "0.1.0"
+IMAGE_NAME = "appartment_price_model"
+CONTAINER_NAME = "inference"
+
+notebook:
+	jupyter notebook --ip 0.0.0.0 --no-browser .
+
+build_api:
+	docker build . -t ${IMAGE_NAME}:${IMAGE_TAG}
+
+run_api:
+	docker run -p 8000:8000 \
+		--name ${CONTAINER_NAME} \
+		--rm ${IMAGE_NAME}:${IMAGE_TAG} 
 
 #################################################################################
 # Self Documenting Commands                                                     #

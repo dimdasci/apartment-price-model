@@ -1,6 +1,32 @@
+random_seed: 230213
+version: '0.1.0'
+title: 'Apartment price model'
+description: 'A pricing model, which can predict the acceptable per night price for Airbnb apartment based on its properties and the offered amenities'
 data:
   source_url: 'http://data.insideairbnb.com/spain/catalonia/barcelona/2022-12-11/data/listings.csv.gz'
   raw_data_path: 'data/raw'
   interim_data_path: 'data/interim'
   processed_data_path: 'data/processed'
+  train_data_file: 'train.csv'
+  test_data_file: 'test.csv'
+  categorical_feature_names_file: 'categorical_feature_names.csv'
+  features:
+    - host_is_superhost
+    - neighbourhood_group_cleansed
+    - property_type
+    - room_type
+    - accommodates
+    - bathrooms_text
+    - bedrooms
+    - beds
+    - number_of_reviews
+  target: 'price'
   test_split_ratio: 0.2
+
+model:
+  path: 'models'
+  report_path: 'reports'
+  eval_hist_file: 'lgbm_regressor_eval.csv'
+  model_file: 'lgbm_regressor.txt'
+  column_transformer_file: 'column_transformer.pkl'
+  model_performance_file: 'lgbm_regressor_performance.csv'
