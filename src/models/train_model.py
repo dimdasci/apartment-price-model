@@ -24,11 +24,11 @@ def main() -> None:
 
     model_path = get_abs_path(
         params["model"]["path"],
-        "lgbm_regressor.txt",
+        params["model"]["model_file"],
     )
     eval_hist_path = get_abs_path(
-        params["model"]["eval_hist_path"],
-        "lgbm_regressor_eval.csv",
+        params["model"]["report_path"],
+        params["model"]["eval_hist_file"],
     )
     categorical_features_path = get_abs_path(
         params["data"]["processed_data_path"],
@@ -49,7 +49,7 @@ def main() -> None:
         label=target,
         feature_name=features.columns.to_list(),
         categorical_feature=categorical_features,
-        free_raw_data=False
+        free_raw_data=False,
     ).construct()
 
     logger.info(
@@ -62,7 +62,7 @@ def main() -> None:
         "objective": "regression",
         "metric": "mse",
         "learning_rate": 0.001,
-        "feature_fraction": 1.0,
+        "lambda_l2": 0.5,
         "seed": params["random_seed"],
         "verbose": 1,
     }

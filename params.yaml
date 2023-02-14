@@ -23,4 +23,7 @@ data:
 
 model:
   path: 'models'
-  eval_hist_path: 'reports'
+  report_path: 'reports'
+  eval_hist_file: 'lgbm_regressor_eval.csv'
+  model_file: 'lgbm_regressor.txt'
+  model_performance_file: 'lgbm_regressor_performance.csv'

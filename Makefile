@@ -46,6 +46,9 @@ build_features:
 train_model:
 	$(PYTHON_INTERPRETER) src/models/train_model.py
 	
+test_model:
+	$(PYTHON_INTERPRETER) src/models/test_model.py
+
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete
