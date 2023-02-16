@@ -1,7 +1,7 @@
 """
 This module provides a command-line interface for testing a saved LightGBM
 model against a test dataset and calculates the R2, MAE, MAPE, and RMSE
-performance metrics, logs them, and saves them to a CSV file. 
+performance metrics, logs them, and saves them to a CSV file.
 
 The dataset and the paths to the model and model performance files
 are specified in a config file `params.yaml` which is loaded with the
