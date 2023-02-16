@@ -66,6 +66,9 @@ async def make_predictions(payload: PredictRequest):
     Params:
         PredictRequest - list of object features to predict,
             first element shall be feature names
+
+    Returns:
+        PredictResponse - list of predictions
     """
 
     model_path = get_abs_path(
