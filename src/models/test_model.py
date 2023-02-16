@@ -1,3 +1,23 @@
+"""
+This module provides a command-line interface for testing a saved LightGBM
+model against a test dataset and calculates the R2, MAE, MAPE, and RMSE
+performance metrics, logs them, and saves them to a CSV file. 
+
+The dataset and the paths to the model and model performance files
+are specified in a config file `params.yaml` which is loaded with the
+`load_params()` function.
+
+This module provides a `main()` function that can be run as a command line
+interface.
+
+Usage:
+    $ python test_model.py
+
+Returns:
+    None
+"""
+
+
 import click
 from src.utils.functions import (
     load_params,
@@ -18,7 +38,20 @@ from sklearn.metrics import (
 
 @click.command()
 def main() -> None:
-    """Trains model"""
+    """Tests model
+
+    This function loads a saved LightGBM model and tests it against
+    a test dataset. The dataset and the paths to the model and model
+    performance files are specified in a config file `params.yaml`
+    which is loaded with the `load_params()` function.
+
+    The function calculates the R2, MAE, MAPE, and RMSE performance metrics,
+    logs them, and saves them to a CSV file at the location specified in
+    the config file.
+
+    Returns:
+        None: The function doesn't return anything.
+    """
 
     logger = logging.getLogger(__name__)
 

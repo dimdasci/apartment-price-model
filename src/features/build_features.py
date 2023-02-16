@@ -1,3 +1,55 @@
+"""
+Builds features from a cleaned dataset based on whether the input dataset
+is for training or testing.
+
+The module defines a `main` function that performs the following steps:
+1. Reads in the input dataset.
+2. Extracts the features and target columns from the input dataset.
+3. Splits the features into categorical and numerical features.
+4. Initializes and fits a transformer to encode the categorical features
+   with Ordinal Encoder and scale the numerical features with StandardScaler
+   for the training dataset.
+5. Transforms the features and target using the fitted transformer.
+6. Joins the transformed features and target into a new dataset.
+7. Saves the new dataset to a file.
+
+If the dataset is for training, a column transformer is initialized and fitted
+to encode categorical features with Ordinal Encoder and scale numerical
+features with StandardScaler. The fitted column transformer is saved, and the
+categorical feature names are written to a CSV file. If the dataset is for
+testing, the saved column transformer is loaded.
+
+The transformed features and the original target are merged into a new
+pandas dataframe, which is saved to a CSV file at the destination dataset path.
+
+Modules imported:
+- `numpy` for scientific computing with Python.
+- `click` for creating command line interfaces in a composable way.
+- `pandas` for data manipulation and analysis.
+- `logging` for logging events and errors.
+- `sklearn` for machine learning algorithms and tools.
+
+Args:
+    stage (DatasetStage): Enum representing the stage of the dataset,
+                          either training or testing.
+
+Returns:
+    None.
+
+Example:
+    To build the features for the training dataset, run the following
+    command in the terminal:
+    ```
+    python build_features.py --stage train
+    ```
+
+    To build the features for the testing dataset, run the following
+    command in the terminal:
+    ```
+    python build_features.py --stage test
+    ```
+"""
+
 import numpy as np
 import click
 from src.utils.functions import (
@@ -20,7 +72,39 @@ from sklearn.preprocessing import OrdinalEncoder, StandardScaler
     "-s", "--stage", type=DatasetStage, help="train or test dataset to clean"
 )
 def main(stage: DatasetStage) -> None:
-    """Cleans features of the dataset depending on stage train/test"""
+    """
+    Builds the features from a cleaned dataset based on whether the input
+    dataset is for training or testing.
+
+    Params:
+        stage (DatasetStage): Enum representing the stage of the dataset,
+                              either training or testing.
+
+    Returns:
+        None.
+
+    The function performs the following steps:
+    1. Reads in the dataset.
+    2. Extracts the features and target columns from the dataset.
+    3. Splits the features into categorical and numerical features.
+    4. Initializes and fits a transformer to encode the categorical features
+       with Ordinal Encoder and scale the numerical features with
+       StandardScaler for the training dataset.
+    5. Transforms the features and target using the fitted transformer.
+    6. Joins the transformed features and target into a new dataset.
+    7. Saves the new dataset to a file.
+
+    If the dataset is for training, a column transformer is initialized and
+    fitted to encode categorical features with Ordinal Encoder and scale
+    numerical features with StandardScaler. The fitted column transformer
+    is saved, and the categorical feature names are written to a CSV file.
+    If the dataset is for testing, the saved column transformer is loaded.
+
+    The features and target are transformed, and a new pandas dataframe
+    is created from the transformed features and the original target.
+    The dataset with features is saved to a CSV file at the destination
+    dataset path.
+    """
 
     logger = logging.getLogger(__name__)
 

@@ -1,3 +1,35 @@
+"""
+This module provides a command-line interface for training a LightGBM
+regression model with cross-validation and saves the trained model and
+evaluation history to files in a directory specified in the params.yaml
+configuration file.
+
+The main function reads parameters from a configuration file, loads the
+training dataset and categorical feature names from CSV files, trains
+a LightGBM model with cross-validation and early stopping, and saves the
+trained model and evaluation history to files.
+
+The params.yaml configuration file contains information on file paths and other
+parameters required for model training. The train_dataset_path specifies the
+path to the CSV file containing the training dataset, and
+categorical_features_path specifies the path to the CSV file containing the
+categorical feature names. The model_path and eval_hist_path specify the paths
+to the files to save the trained model and evaluation history, respectively.
+
+The LightGBM model is trained using the lgb.cv function with the cvbooster
+object saved to file. The evaluation history is saved to a CSV file too.
+
+Usage:
+    $ python train_model.py
+
+Returns:
+    None
+
+If the script is run directly, the main function is executed, and logging
+is set up with the setup_logging function.
+"""
+
+
 import click
 from src.utils.functions import (
     load_params,
@@ -11,8 +43,16 @@ import pandas as pd
 
 @click.command()
 def main() -> None:
-    """Trains model"""
+    """
+    Trains a LightGBM regression model with cross-validation and save
+    the trained model and evaluation history.
 
+    The function loads parameters from a configuration file, reads the
+    training dataset and categorical feature names from CSV files,
+    trains a LightGBM model with cross-validation and early stopping,
+    and saves the trained model and evaluation history to files in a
+    directory specified in `params.yaml` configuration file.
+    """
     logger = logging.getLogger(__name__)
 
     params = load_params()
