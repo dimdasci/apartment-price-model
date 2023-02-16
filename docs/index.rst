@@ -1,18 +1,14 @@
-.. apartment price model documentation master file, created by
-   sphinx-quickstart.
+.. Apartment price model documentation master file, created by
+   sphinx-quickstart on Thu Feb 16 20:09:42 2023.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-apartment price model documentation!
-==============================================
-
-Contents:
+Welcome to Apartment price model's documentation!
+=================================================
 
 .. toctree::
    :maxdepth: 2
-
-   getting-started
-   commands
+   :caption: Contents:
 
 
 
