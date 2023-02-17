@@ -24,8 +24,8 @@ The whole team will benefit from discovering the power of machine learning from 
 ## Approach
 
 The proposed approach to the solution includes the following steps: 
-- Take the minimum set of functions, based on common sense. 
-- Perform an initial explanatory analysis of the data to understand the overall structure of the data and identify critical issues that are blocking the simulation. 
+- Take the minimum set of features, based on common sense. 
+- Perform an initial explanatory analysis of the data to understand the overall structure of the data and identify critical issues that are blocking the model development. 
 - Correct these issues, train the model and evaluate its performance on the test dataset. 
 - Deliver the trained model to an API-wrapped Docker container with a prediction endpoint. 
 - The project is ready for continuous improvement until the quality of the model meets the business goals.

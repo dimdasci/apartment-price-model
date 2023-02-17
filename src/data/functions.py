@@ -5,7 +5,8 @@ This module contains three functions:
 
 - true_false_to_int: Transforms 't' and 'f' values to 1 and 0, respectively.
 - is_features_valid: Validates whether feature values are within a valid range.
-- clean_features: Cleans and transforms feature values in a Pandas DataFrame.
+- clean_features: Cleans and transforms feature values in a Pandas DataFrame
+  based on settings in params.yaml.
 
 The module requires the Pandas library to be installed.
 
@@ -22,6 +23,7 @@ Example usage:
 
 import numpy as np
 import pandas as pd
+from src.utils.functions import load_params
 
 
 def true_false_to_int(value: str) -> float:
@@ -59,23 +61,31 @@ def price_to_int(value: str) -> int:
 
 
 def is_features_valid(row: pd.DataFrame) -> bool:
-    """Checks if a row of feature values is within a valid range.
+    """
+    Check whether a Pandas DataFrame row satisfies the feature limits
+    specified in the configuration file.
 
     Params:
-        row: A Pandas DataFrame representing a single row of feature values
-            for a vacation rental property. The DataFrame should contain
-            the following columns:
-            - 'bedrooms': the number of bedrooms in the property (an integer)
-            - 'accommodates': the maximum number of guests the property can
-              accommodate (an integer)
+        row: pd.DataFrame
+            A Pandas DataFrame row containing feature values to be
+            validated.
 
     Returns:
-        A boolean value indicating whether the feature values are within
-        a valid range. The function returns True if the number of bedrooms
-        is less than 5 and the maximum number of guests is less than 9,
-        and False otherwise.
+        bool
+            True if all feature values in the row are below their respective
+            limits, False otherwise.
+
     """
-    return row.bedrooms < 5 and row.accommodates < 9
+    params = load_params()
+
+    return all(
+        [
+            row[feature] < limit
+            for feature, limit in params["data_cleaning"][
+                "feature_limits"
+            ].items()
+        ]
+    )
 
 
 def clean_features(data: pd.DataFrame) -> pd.DataFrame:
