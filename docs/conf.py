@@ -9,7 +9,7 @@
 project = 'Apartment price model'
 copyright = '2023, Dmitrii Kharitonov'
 author = 'Dmitrii Kharitonov'
-release = '0.1.0'
+release = '0.2.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
