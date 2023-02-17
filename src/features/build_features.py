@@ -15,21 +15,13 @@ The module defines a `main` function that performs the following steps:
 
 If the dataset is for training, a column transformer is initialized and fitted
 to encode categorical features with Ordinal Encoder and scale numerical
-features with StandardScaler. The fitted column transformer is saved, and the
-categorical feature names are written to a CSV file. If the dataset is for
-testing, the saved column transformer is loaded.
+features with StandardScaler. The fitted column transformer is saved. If the
+dataset is for testing, the saved column transformer is loaded.
 
 The transformed features and the original target are merged into a new
 pandas dataframe, which is saved to a CSV file at the destination dataset path.
 
-Modules imported:
-- `numpy` for scientific computing with Python.
-- `click` for creating command line interfaces in a composable way.
-- `pandas` for data manipulation and analysis.
-- `logging` for logging events and errors.
-- `sklearn` for machine learning algorithms and tools.
-
-Args:
+Params:
     stage (DatasetStage): Enum representing the stage of the dataset,
                           either training or testing.
 
@@ -96,8 +88,8 @@ def main(stage: DatasetStage) -> None:
 
     If the dataset is for training, a column transformer is initialized and
     fitted to encode categorical features with Ordinal Encoder and scale
-    numerical features with StandardScaler. The fitted column transformer
-    is saved, and the categorical feature names are written to a CSV file.
+    numerical features with StandardScaler.
+
     If the dataset is for testing, the saved column transformer is loaded.
 
     The features and target are transformed, and a new pandas dataframe
@@ -144,6 +136,19 @@ def main(stage: DatasetStage) -> None:
         == features.shape[1]
     )
 
+    as_numerical = [
+        _
+        for _ in numerical_features
+        if _ not in params["model"]["categorical_features"]
+    ]
+    as_categorical = [
+        _
+        for _ in numerical_features
+        if _ in params["model"]["categorical_features"]
+    ]
+    logger.info(f"Left as numerical {', '.join(as_numerical)}")
+    logger.info(f"Treated as categorical {', '.join(as_categorical)}")
+
     if stage == DatasetStage.TRAIN:
         # we initialize and fit transformer to encode categorical
         # features with Ordinal Encoder and scale numerical
@@ -158,7 +163,8 @@ def main(stage: DatasetStage) -> None:
                     ),
                     categorical_features,
                 ),
-                ("numerical", StandardScaler(), numerical_features),
+                ("numerical", StandardScaler(), as_numerical),
+                ("numerical_as_categorical", "passthrough", as_categorical),
             ],
             remainder="drop",
         )
@@ -166,15 +172,6 @@ def main(stage: DatasetStage) -> None:
         # save transformer for test dataset processing stage
         save_pickle(column_transformer, column_transformer_path)
         logger.info("Saved fitted column transformer")
-
-        # save categorical feature names
-        pd.DataFrame({"categorical": categorical_features}).to_csv(
-            get_abs_path(
-                params["data"]["processed_data_path"],
-                params["data"]["categorical_feature_names_file"],
-            ),
-            index=False,
-        )
 
     else:
         # load fitted transformer
@@ -189,7 +186,8 @@ def main(stage: DatasetStage) -> None:
     )
 
     dataset = pd.DataFrame(
-        features_transformed, columns=categorical_features + numerical_features
+        features_transformed,
+        columns=categorical_features + as_numerical + as_categorical,
     ).join(target_transformed)
 
     dataset.to_csv(dest_dataset_path, index=False)

@@ -79,8 +79,10 @@ def main(stage: DatasetStage) -> None:
     # clean features
     df = clean_features(df)
 
-    # filter valid rows with price less than 1000 and then drop is_valid column
-    df = df[df.is_valid].query("price < 1000").drop("is_valid", axis=1)
+    # filter valid rows with price less than price limit
+    # and then drop is_valid column
+    price_limit = params["data_cleaning"]["target_limit"]
+    df = df[(df.is_valid) & (df.price < price_limit)].drop("is_valid", axis=1)
 
     logger.info(f"Cleaned dataset shape {df.shape}")
     df.to_csv(dest_dataset_path, index=False)

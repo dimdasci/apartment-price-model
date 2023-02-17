@@ -11,9 +11,9 @@ trained model and evaluation history to files.
 
 The params.yaml configuration file contains information on file paths and other
 parameters required for model training. The train_dataset_path specifies the
-path to the CSV file containing the training dataset, and
-categorical_features_path specifies the path to the CSV file containing the
-categorical feature names. The model_path and eval_hist_path specify the paths
+path to the CSV file containing the training dataset.
+
+The model_path and eval_hist_path specify the paths
 to the files to save the trained model and evaluation history, respectively.
 
 The LightGBM model is trained using the lgb.cv function with the cvbooster
@@ -70,14 +70,8 @@ def main() -> None:
         params["model"]["report_path"],
         params["model"]["eval_hist_file"],
     )
-    categorical_features_path = get_abs_path(
-        params["data"]["processed_data_path"],
-        params["data"]["categorical_feature_names_file"],
-    )
 
-    categorical_features = pd.read_csv(
-        categorical_features_path
-    ).categorical.to_list()
+    categorical_features = params["model"]["categorical_features"]
     logger.info(f"Categorical feature names {', '.join(categorical_features)}")
 
     df = pd.read_csv(train_dataset_path)
@@ -104,7 +98,7 @@ def main() -> None:
         "learning_rate": 0.001,
         "lambda_l2": 0.5,
         "seed": params["random_seed"],
-        "verbose": 1,
+        "verbose": 2,
     }
     eval_hist = lgb.cv(
         model_params,
@@ -113,6 +107,7 @@ def main() -> None:
         nfold=5,
         stratified=False,
         shuffle=True,
+        eval_train_metric=True,
         callbacks=[lgb.early_stopping(50)],
         return_cvbooster=True,
     )

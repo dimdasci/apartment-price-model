@@ -17,9 +17,11 @@ def test_price_to_int(test_input, expected):
 
 def test_is_features_valid():
     df = pd.DataFrame({
-        'bedrooms': [3, 6, 4, 8], 
-        'accommodates': [5, 5, 10, 10]})
-    assert df.apply(is_features_valid, axis=1).to_list() == [True, False, False, False]
+        'bedrooms': [3, 6, 4, 8, 3], 
+        'accommodates': [5, 5, 12, 10, 10],
+        'beds': [3, 3, 8, 3, 3]
+        })
+    assert df.apply(is_features_valid, axis=1).to_list() == [True, False, False, False, True]
 
 @pytest.mark.parametrize("test_input", ["source_url", "features", "target", 
                                         "test_split_ratio", "train_data_file", "test_data_file"])

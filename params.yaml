@@ -24,7 +24,24 @@ data:
   target: 'price'
   test_split_ratio: 0.2
 
+data_cleaning:
+  feature_limits:
+    accommodates: 11
+    beds: 11
+    bedrooms: 6
+  target_limit: 500
+
 model:
+  categorical_features:
+    - host_is_superhost
+    - neighbourhood_group_cleansed
+    - property_type
+    - room_type
+    - accommodates
+    - bathrooms_text
+    - bedrooms
+    - beds
+
   path: 'models'
   report_path: 'reports'
   eval_hist_file: 'lgbm_regressor_eval.csv'
